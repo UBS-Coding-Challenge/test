@@ -26,4 +26,5 @@ async def sample_query_param(name: str, age: int | None = None):
 @router.post("/samples", status_code=status.HTTP_201_CREATED)
 async def create_sample(request: Q1Request) -> Q1Response:
     res = q1_get_sum(request.nums, 10)
+    print("hello")
     return Q1Response(res=res)
