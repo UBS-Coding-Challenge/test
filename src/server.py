@@ -15,7 +15,7 @@ def create_app() -> FastAPI:
 
     @app.get("/health-check")
     async def health_check():
-        return "v1"
+        return "v2"
     
     return app
 
