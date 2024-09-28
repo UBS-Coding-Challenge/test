@@ -9,16 +9,18 @@ def q3_solution(time: list, prerequisites: list[tuple]):
     Q = deque()
 
     for pre in prerequisites:
-        adj[pre[0] - 1].append(pre[1] - 1)
-        indegree[pre[1] - 1] += 1
+        adj[pre[1] - 1].append(pre[0] - 1)
+        indegree[pre[0] - 1] += 1
 
+    total_max = 0
+    print(adj)
     for i in range(n):
         if indegree[i] == 0:
             Q.append(i)
-            print(i)
-            dfs(adj, time, [False for _ in range(n)], i, time[i])
+            cost = dfs(adj, time, [False for _ in range(n)], i)
+            total_max = max(total_max, cost)
 
-    return glob_max
+    return total_max
 
     # res = 0
     # while Q:
@@ -34,12 +36,15 @@ def q3_solution(time: list, prerequisites: list[tuple]):
     #     res += level_res
 
 
-def dfs(adj, time, visited, i, running_sum):
+def dfs(adj, time, visited, i):
     if len(adj[i]) == 0:
-        global glob_max
-        glob_max = max(glob_max, running_sum)
+        return time[i]
 
+    max_cost = 0
     for ngbr in adj[i]:
-        if ngbr not in visited:
+        # if ngbr not in visited:
             visited[ngbr] = True
-            dfs(adj, time, visited, ngbr, running_sum + time[ngbr])
+            ngbr_cost = dfs(adj, time, visited, ngbr)
+            max_cost = max(max_cost, time[i] + ngbr_cost)
+
+    return max_cost

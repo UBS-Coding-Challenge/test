@@ -10,20 +10,20 @@ direction_move = {
     'l': (0, -1)
 }
 
-res = []
+res = None
 
 def q2_solution(grid: list[list[str]]):
+    global res
+    res = None
     m, n = len(grid), len(grid[0])
     timelapse = [[set() for _ in range(n)] for _ in range(m)]
     bullet_map = [[set() for _ in range(n)] for _ in range(m)]
+
     for i in range(m):
         for j in range(n):
             if grid[i][j] in ['u', 'd', 'r', 'l']:
                 bullet_map[i][j].add(grid[i][j])
                 mark_time(grid, timelapse, i, j, grid[i][j])
-
-    # for t in timelapse:
-    #     print(t)
 
     for i in range(m):
         for j in range(n):
@@ -46,13 +46,17 @@ def f(grid, timelapse, bullet_map, i, j, path, cur_time):
     if i < 0 or i >= m or j < 0 or j >= n:
         return
 
+    # time이 bullet_map[i][j]의 모든 것들보다 더 클때
     all_greater = True
     for btime in get_timelapse_list(timelapse[i][j]):
+        if cur_time == btime:
+            return
+
         if cur_time <= btime:
             all_greater = False
             break
 
-    if all_greater and grid[i][j] != '*':
+    if all_greater:
         global res
         res = path[:]
         return
@@ -76,8 +80,6 @@ def f(grid, timelapse, bullet_map, i, j, path, cur_time):
         if break_flag:
             continue
 
-        # if nx == 3 and ny == 2 and d == 3:
-        #     print("sdf")
 
         direction = None
         if d == 0: # down
@@ -110,30 +112,6 @@ def mark_time(grid, timelapse, i, j, direction):
     cnt = 0
 
     while i >= 0 and j >= 0 and i < m and j < n:
-        # print(i, j)
         timelapse[i][j].add((cnt, direction))
         i, j = i + dx, j + dy
         cnt += 1
-
-def move_map(grid, bullet_map):
-    temp_bullet_map = copy.deepcopy(bullet_map)
-    # pprint(temp_bullet_map)
-    m, n = len(grid), len(grid[0])
-    for i in range(m):
-        for j in range(n):
-            for bullet_type in list(bullet_map[i][j]):
-                move(grid, temp_bullet_map, i, j, bullet_type)
-    # pprint(temp_bullet_map)
-    # print("-" * 100)
-    return temp_bullet_map
-
-def move(grid, bullet_map, i, j, bullet_type):
-    m, n = len(grid), len(grid[0])
-    dx, dy = direction_move[bullet_type]
-
-    nx, ny = i + dx, j + dy
-    if nx < 0 or nx >= m or ny < 0 or ny >= n:
-        return
-    bullet_map[i][j].remove(bullet_type)
-    bullet_map[nx][ny].add(bullet_type)
-
