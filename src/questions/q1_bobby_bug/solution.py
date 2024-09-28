@@ -1,9 +1,11 @@
 
 def q1_solution(bugseq: list[list[int]]):
-    print(bugseq)
     return f(bugseq, 0)
 
-def f(bugseq, start_time: int) -> int:
+def f(bugseq: list[list[int]], start_time: int) -> int:
+    if len(bugseq) == 0:
+        return 0
+
     max_bug = 0
     for i in range(len(bugseq)):
         t, limit = bugseq[i]
