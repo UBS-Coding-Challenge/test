@@ -1,4 +1,4 @@
 from pydantic import BaseModel, Field
 
-class Q1Response(BaseModel):
+class Q5Response(BaseModel):
     efficiency: int = Field(...)
